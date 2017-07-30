@@ -1,7 +1,7 @@
 package gamelogic;
 
 /**
- * @author vanessa
+ * Enum to model movement of tiles, triggered by KeyHandler (via ArrowKeys)
  *
  */
  
