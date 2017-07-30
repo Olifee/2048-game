@@ -5,15 +5,13 @@ import java.util.List;
 import java.util.Random;
  
 public class NumberGame {
-	final private int width, height; // x-Achse (nach rechts), y-Achse (nach
-										// unten)
+	final private int width, height; // x-axis (left -> right) | y-axis (up -> down)
 	private int points;
-	private Tile[][] playingField; // Spielfeld, oben links liegt Feld (0, 0),
-									// unten rechts (width-1, height-1)
+	private Tile[][] playingField; // game board model (Tile[0][0] is on upper left corner)
 
 	public NumberGame(int width, int height) {
 		if (width < 1 || height < 1) {
-			throw new IllegalArgumentException("Spielfeld muss mindestens 1x1 Felder groß sein.");
+			throw new IllegalArgumentException("Game board size needs to be 1x1 or bigger.");
 		}
 		this.width = width;
 		this.height = height;
@@ -24,11 +22,11 @@ public class NumberGame {
 
 	public NumberGame(int width, int height, int initialTiles) {
 		if (initialTiles < 0 || initialTiles > width * height) {
-			throw new IllegalArgumentException("So viele/ wenige Startkacheln kann es nicht geben.");
+			throw new IllegalArgumentException("Thats to few/many starting tiles.");
 		}
 
 		if (width < 1 || height < 1) {
-			throw new IllegalArgumentException("Spielfeld muss mindestens 1x1 Felder groß sein.");
+			throw new IllegalArgumentException("Game board size needs to be 1x1 or bigger.");
 		}
 		this.width = width;
 		this.height = height;
@@ -42,23 +40,17 @@ public class NumberGame {
 		}
 	}
 
-	/**
-	 * @return the width
-	 */
 	public int getWidth() {
 		return width;
 	}
 
-	/**
-	 * @return the height
-	 */
 	public int getHeight() {
 		return height;
 	}
 
 	public int get(Coordinate2D coord) {
 		if (coord.getX() >= width || coord.getY() >= height) {
-			throw new IndexOutOfBoundsException("Diese Position liegt außerhalb des Spielfelds.");
+			throw new IndexOutOfBoundsException("This position is out of bounds.");
 		}
 		Tile tileHere = playingField[coord.getX()][coord.getY()];
 		if (tileHere == null)
@@ -69,7 +61,7 @@ public class NumberGame {
 
 	public int get(int x, int y) {
 		if (x >= width || y >= height) {
-			throw new IndexOutOfBoundsException("Diese Position liegt außerhalb des Spielfelds.");
+			throw new IndexOutOfBoundsException("This position is out of bounds.");
 		}
 		Tile tileHere = playingField[x][y];
 		if (tileHere == null)
@@ -97,7 +89,7 @@ public class NumberGame {
 
 	public Tile addRandomTile() {
 		if (isFull()) {
-			throw new TileExistsException("Spielfeld schon voll :(");
+			throw new TileExistsException("Game board full already.");
 		}
 
 		Tile newTile = null;
@@ -133,7 +125,7 @@ public class NumberGame {
 
 	public Tile addTile(int x, int y, int value) {
 		if (playingField[x][y]!=null){
-			throw new TileExistsException("Kann nicht hinzugefügt werden, Feld ist schon belegt.");
+			throw new TileExistsException("Cannot be added, the field is already occupied.");
 		}
 		Coordinate2D coord = new Coordinate2D(x, y);
 		Tile newTile = new Tile(coord, value);
@@ -161,7 +153,7 @@ public class NumberGame {
 		return listMove;
 	}
 
-	//spaltenweise von oben
+	//column-wise from the top
 	private void moveUp(List<Move> listMove) {
 		for(int x = 0; x<width; x++){
 			for(int y = 0; y<height; y++){
@@ -173,7 +165,7 @@ public class NumberGame {
 		
 	}
 	
-	//spaltenweise von unten
+	//column-wise from the bottom
 	private void moveDown(List<Move> listMove) {
 		for(int x = 0; x<width; x++){
 			for(int y = height-1; y>=0; y--){
@@ -184,7 +176,7 @@ public class NumberGame {
 		}
 	}
 
-	//zeilenweise von links
+	//line-wise from left side
 	private void moveLeft(List<Move> listMove) {
 		for(int y = 0; y<height; y++){
 			for(int x = 0; x<width; x++){
@@ -195,7 +187,7 @@ public class NumberGame {
 		}
 	}
 	
-	//zeilenweise von rechts
+	//line-wise from right side
 	private void moveRight(List<Move> listMove) {
 		for(int y = 0; y<height; y++){
 			for(int x = height-1; x>=0; x--){
@@ -210,24 +202,23 @@ public class NumberGame {
 	private void fieldHandler(Tile tile, Direction dir, List<Move> listMove){
 		boolean exit = false;
 		Coordinate2D prevCoord = tile.getCoordinate();
-		Coordinate2D prevPrevCoord; //Zwischenspeicher
+		Coordinate2D prevPrevCoord;
 		
 		while (!exit){
 			prevPrevCoord = new Coordinate2D(prevCoord.getX(), prevCoord.getY());
 			prevCoord = getPrevCoord(prevCoord, dir);
-			//Tile liegt schon am Rand des Spielfelds
+			//Tile already at bound of game board
 			if (prevCoord==null){
 				if (tile.getCoordinate().equals(prevPrevCoord)){
 					break;
 				}
 				listMove.add(new Move(tile.getCoordinate(), prevPrevCoord, tile.getValue()));
-				//Achtung: Hier wird einfach neues Feld erzeugt
 				playingField[prevPrevCoord.getX()][prevPrevCoord.getY()] = new Tile(prevPrevCoord, tile.getValue());
 				playingField[tile.getCoordinate().getX()][tile.getCoordinate().getY()] = null;
 				break;
 			}
 
-			//Tile hat gleichwertiges Feld vor sich
+			//Tile has other tile with same value as neighbor
 			if (tile.getValue()==get(prevCoord)){
 				listMove.add(new Move(tile.getCoordinate(), prevCoord, tile.getValue(), tile.getValue()*2));
 				playingField[prevCoord.getX()][prevCoord.getY()] = new Tile(prevCoord, tile.getValue()*2);
@@ -235,19 +226,16 @@ public class NumberGame {
 				points += tile.getValue()*2;
 				break;
 			}
-			//anderes Feld vorne dran
+			//Tile has other tile with different value as neighbor
 			if (get(prevCoord)!=0 && tile.getValue()!=get(prevCoord)){
 				if (tile.getCoordinate().equals(prevPrevCoord)){
 					break;
 				}
 				listMove.add(new Move(tile.getCoordinate(), prevPrevCoord, tile.getValue()));
-				//Achtung: Hier wird einfach neues Feld erzeugt
 				playingField[prevPrevCoord.getX()][prevPrevCoord.getY()] = new Tile(prevPrevCoord, tile.getValue());
 				playingField[tile.getCoordinate().getX()][tile.getCoordinate().getY()] = null;
 				break;
 			}
-			//leeres Feld vornedran
-			//einfach Schleife weiter laufen lassen
 		}
 	}
 	
