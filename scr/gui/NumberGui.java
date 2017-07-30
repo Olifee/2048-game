@@ -1,5 +1,11 @@
 package gui;
 
+/**
+* JavaFX GUI for 2048 game
+* Listens to ArrowKeys on keyboard
+* Game parameters can easily be changed in main method (default: 4x4 sized game board, starting with 2 tiles)
+*/
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;

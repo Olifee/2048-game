@@ -1,8 +1,8 @@
 package gamelogic;
 
 /**
- * @author vanessa
- * Koordinaten eines Feldes auf dem Spielbrett; immutable
+ * Model for 2D-Coordinates of the game board
+ * Coordinates are immutable!
  */
  
 public final class Coordinate2D {
@@ -10,29 +10,20 @@ public final class Coordinate2D {
 	
 	public Coordinate2D(int x, int y){
 		if (x<0||y<0){
-			throw new IllegalArgumentException("Die Koordinaten müssen positive Zahlen sein.");
+			throw new IllegalArgumentException("Coordinates have to be positive integers.");
 		}
 		this.x = x;
 		this.y = y;
 	}
 
-	/**
-	 * @return the x
-	 */
 	public int getX() {
 		return x;
 	}
 
-	/**
-	 * @return the y
-	 */
 	public int getY() {
 		return y;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -42,9 +33,6 @@ public final class Coordinate2D {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -60,6 +48,4 @@ public final class Coordinate2D {
 			return false;
 		return true;
 	}
-	
-
 }
