@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import jpp.numbergame.*;
+import gamelogic.*;
 
 public class NumberGui extends Application {
 
