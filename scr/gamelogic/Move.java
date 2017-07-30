@@ -1,8 +1,8 @@
 package gamelogic;
 
 /**
- * @author vanessa
- * Bewegung einer einzelnen Kachel; immutable
+ * Movement of a single tile, also immutable
+ *
  */
  
 public final class Move {
@@ -29,30 +29,18 @@ public final class Move {
 		this.newValue = value;
 	}
 
-	/**
-	 * @return the from
-	 */
 	public Coordinate2D getFrom() {
 		return from;
 	}
 
-	/**
-	 * @return the to
-	 */
 	public Coordinate2D getTo() {
 		return to;
 	}
 
-	/**
-	 * @return the oldValue
-	 */
 	public int getOldValue() {
 		return oldValue;
 	}
 
-	/**
-	 * @return the newValue
-	 */
 	public int getNewValue() {
 		return newValue;
 	}
@@ -61,9 +49,6 @@ public final class Move {
 		return (oldValue!=newValue);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -75,9 +60,6 @@ public final class Move {
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
